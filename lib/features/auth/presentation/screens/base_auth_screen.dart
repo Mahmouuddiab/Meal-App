@@ -15,6 +15,7 @@ class BaseAuthScreen extends StatefulWidget {
   final String bottomText;
   final VoidCallback onBottomTextPressed;
   final String checkText;
+  final GlobalKey<FormState> formKey;
 
   const BaseAuthScreen({
     super.key,
@@ -24,6 +25,7 @@ class BaseAuthScreen extends StatefulWidget {
     required this.bottomText,
     required this.onBottomTextPressed,
     required this.checkText,
+    required this.formKey,
   });
 
   @override
@@ -59,7 +61,7 @@ class _BaseAuthScreenState extends State<BaseAuthScreen> {
                   child: Image.asset(AppImages.logo),
                 ),
                 Gap(59.h),
-                ...widget.formFields,
+                _buildFormField(),
                 Gap(10.h),
                 CustomCheckRow(
                   value: _checkValue,
@@ -98,4 +100,7 @@ class _BaseAuthScreenState extends State<BaseAuthScreen> {
       ),
     );
   }
+
+  Widget _buildFormField() =>
+      Form(key: widget.formKey, child: Column(children: widget.formFields));
 }

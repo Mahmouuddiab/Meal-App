@@ -4,11 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:meal_app/core/Dialogs/dialogs.dart';
 import 'package:meal_app/core/Utils/app_colors.dart';
+import 'package:meal_app/core/Utils/app_validators.dart';
 import 'package:meal_app/core/Utils/strings.dart';
+import 'package:meal_app/core/routing/app_routes.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_states.dart';
 import 'package:meal_app/features/auth/presentation/screens/base_auth_screen.dart';
-import 'package:meal_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:meal_app/features/auth/presentation/widgets/custom_field.dart';
 
 class Register extends StatefulWidget {
@@ -24,7 +25,6 @@ class _RegisterState extends State<Register> {
   final passwordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   bool obscureText = true;
-
   @override
   void dispose() {
     emailController.dispose();
@@ -59,86 +59,74 @@ class _RegisterState extends State<Register> {
           );
         }
       },
-      builder: (context, state) {
-        return BaseAuthScreen(
-          formFields: [
-            CustomField(
-              keyboardType: TextInputType.text,
-              hint: AppStrings.fullName,
-              label: AppStrings.fullName,
-              prefixIcon: const Icon(
-                Icons.person_outline,
-                color: AppColors.white,
+      builder:
+          (context, state) => BaseAuthScreen(
+            formKey: formKey,
+            formFields: [
+              CustomField(
+                keyboardType: TextInputType.text,
+                hint: AppStrings.fullName,
+                prefixIcon: Icon(Icons.person_outline, color: AppColors.white),
+                label: AppStrings.fullName,
+                controller: nameController,
+                validator:
+                    (_) =>
+                        AppValidators.displayNamevalidator(nameController.text),
               ),
-              controller: nameController,
-              validator:
-                  (value) =>
-                      value?.isEmpty ?? true
-                          ? AppStrings.fullNameValidate
-                          : null,
-            ),
-            Gap(15.h),
-            CustomField(
-              keyboardType: TextInputType.emailAddress,
-              hint: AppStrings.email,
-              label: AppStrings.email,
-              prefixIcon: const Icon(
-                Icons.email_outlined,
-                color: AppColors.white,
-              ),
-              controller: emailController,
-              validator:
-                  (value) =>
-                      value?.isEmpty ?? true ? AppStrings.emailValidate : null,
-            ),
-            Gap(15.h),
-            CustomField(
-              hint: AppStrings.password,
-              label: AppStrings.password,
-              prefixIcon: const Icon(
-                Icons.lock_outline,
-                color: AppColors.white,
-              ),
-              controller: passwordController,
-              obscureText: obscureText,
-              validator:
-                  (value) =>
-                      value?.isEmpty ?? true
-                          ? AppStrings.passwordValidate
-                          : null,
-              suffixIcon: IconButton(
-                onPressed: () => setState(() => obscureText = !obscureText),
-                icon: Icon(
-                  obscureText
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
+              Gap(15.h),
+              CustomField(
+                keyboardType: TextInputType.emailAddress,
+                hint: AppStrings.email,
+                label: AppStrings.email,
+                prefixIcon: const Icon(
+                  Icons.email_outlined,
                   color: AppColors.white,
                 ),
+                controller: emailController,
+                validator:
+                    (_) => AppValidators.emailValidator(emailController.text),
               ),
-            ),
-            Gap(10.h),
-          ],
-          buttonText: AppStrings.register,
-          onButtonPressed: () {
-            if (formKey.currentState?.validate() ?? false) {
-              context.read<AuthBloc>().add(
-                AuthSignUp(
-                  email: emailController.text,
-                  password: passwordController.text,
-                  name: nameController.text,
+              Gap(15.h),
+              CustomField(
+                hint: AppStrings.password,
+                label: AppStrings.password,
+                prefixIcon: const Icon(
+                  Icons.lock_outline,
+                  color: AppColors.white,
                 ),
-              );
-            }
-          },
-          bottomText: AppStrings.haveAccount,
-          onBottomTextPressed:
-              () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                controller: passwordController,
+                obscureText: obscureText,
+                validator:
+                    (_) => AppValidators.passwordValidator(
+                      passwordController.text,
+                    ),
+                suffixIcon: IconButton(
+                  onPressed: () => setState(() => obscureText = !obscureText),
+                  icon: Icon(
+                    obscureText
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                    color: AppColors.white,
+                  ),
+                ),
               ),
-          checkText: AppStrings.termsAndConditions,
-        );
-      },
+            ],
+            buttonText: AppStrings.register,
+            onButtonPressed: () {
+              if (formKey.currentState?.validate() ?? false) {
+                context.read<AuthBloc>().add(
+                  AuthSignIn(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  ),
+                );
+              }
+            },
+            bottomText: AppStrings.haveAccount,
+            onBottomTextPressed:
+                () => Navigator.pushNamed(context, AppRoutes.login),
+            checkText: AppStrings.termsAndConditions,
+          ),
     );
   }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meal_app/core/locator/service_locator.dart';
+import 'package:meal_app/core/routing/app_router.dart';
+import 'package:meal_app/core/routing/app_routes.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:meal_app/features/auth/presentation/screens/login_screen.dart';
 
@@ -28,6 +30,8 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: MaterialApp(
+        initialRoute: AppRoutes.login,
+        onGenerateRoute: AppRouter.generateRoute,
         debugShowCheckedModeBanner: false,
         home: LoginScreen(),
       ),

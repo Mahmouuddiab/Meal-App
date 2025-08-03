@@ -4,11 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:meal_app/core/Dialogs/dialogs.dart';
 import 'package:meal_app/core/Utils/app_colors.dart';
+import 'package:meal_app/core/Utils/app_validators.dart';
 import 'package:meal_app/core/Utils/strings.dart';
+import 'package:meal_app/core/routing/app_routes.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_states.dart';
 import 'package:meal_app/features/auth/presentation/screens/base_auth_screen.dart';
-import 'package:meal_app/features/auth/presentation/screens/register.dart';
 import 'package:meal_app/features/auth/presentation/widgets/custom_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,6 +24,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool obscureText = true;
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,26 +37,35 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is AuthLoading) {
           DialogFunctions.showLoadingDialog(context, "Loading..");
-        } else if (state is AuthFailure) {
+        }
+        if (state is AuthFailure) {
           DialogFunctions.hideLoading(context);
           DialogFunctions.showMessageDialog(
             context: context,
             message: state.message,
             posActionName: "Ok",
-            title: "Login Failed",
+            posAction: () {
+              Navigator.pop(context);
+            },
+            title: "Login Fail",
           );
-        } else if (state is AuthSuccess) {
+        }
+        if (state is AuthSuccess) {
           DialogFunctions.hideLoading(context);
           DialogFunctions.showMessageDialog(
             context: context,
-            message: "Successfully logged in!",
+            message: "success",
             posActionName: "Ok",
-            title: "Login Success",
+            posAction: () {
+              Navigator.pop(context);
+            },
+            title: "Login success",
           );
         }
       },
       builder: (context, state) {
         return BaseAuthScreen(
+          formKey: formKey,
           formFields: [
             CustomField(
               keyboardType: TextInputType.emailAddress,
@@ -61,8 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               controller: emailController,
               validator:
-                  (value) =>
-                      value?.isEmpty ?? true ? AppStrings.emailValidate : null,
+                  (_) => AppValidators.emailValidator(emailController.text),
             ),
             Gap(15.h),
             CustomField(
@@ -75,10 +90,8 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: passwordController,
               obscureText: obscureText,
               validator:
-                  (value) =>
-                      value?.isEmpty ?? true
-                          ? AppStrings.passwordValidate
-                          : null,
+                  (_) =>
+                      AppValidators.passwordValidator(passwordController.text),
               suffixIcon: IconButton(
                 onPressed: () => setState(() => obscureText = !obscureText),
                 icon: Icon(
@@ -103,10 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           bottomText: AppStrings.doNotHaveAccount,
           onBottomTextPressed:
-              () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const Register()),
-              ),
+              () => Navigator.pushNamed(context, AppRoutes.register),
           checkText: AppStrings.rememberMe,
         );
       },
