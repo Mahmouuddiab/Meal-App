@@ -1,0 +1,54 @@
+import 'package:get_it/get_it.dart';
+import 'package:meal_app/core/secrets/app_secrets.dart';
+import 'package:meal_app/features/auth/data/dataSource/auth_remote_data_source.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../features/auth/data/repository/auth_repository_impl.dart';
+import '../../features/auth/domain/repository/auth_repository.dart';
+import '../../features/auth/domain/usecases/current_user.dart';
+import '../../features/auth/domain/usecases/login_usecase.dart';
+import '../../features/auth/domain/usecases/register_usecse.dart';
+import '../../features/auth/presentation/bloc/auth_bloc.dart';
+
+final serviceLocator = GetIt.instance;
+
+Future<void> initDependices() async {
+  final supabse = await Supabase.initialize(
+      url: AppSecrets.supabaseUrl, anonKey: AppSecrets.anonKey);
+  serviceLocator.registerSingleton<SupabaseClient>(supabse.client);
+  initAuth();
+
+}
+
+void initAuth() {
+  // Data source
+  serviceLocator
+    ..registerFactory<AuthRemoteDataSource>(
+          () => AuthRemoteDataSourceImpl(serviceLocator()),
+    )
+  // Repository
+    ..registerFactory<AuthRepository>(() => AuthRepositoryImpl(serviceLocator()))
+  // Use-cases
+    ..registerFactory(
+          () => UserSignUp(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+          () => UserSignIn(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+          () => CurrentUser(
+        serviceLocator(),
+      ),
+    )
+  // Bloc
+    ..registerLazySingleton(() =>
+        AuthBloc(currentUser:serviceLocator() ,userSignUp: serviceLocator(), userSignIn: serviceLocator()));
+
+
+
+}
+
