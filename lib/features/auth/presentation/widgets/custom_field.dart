@@ -1,41 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meal_app/core/Utils/app_colors.dart';
 
 class CustomField extends StatelessWidget {
-  String hint;
-  Widget? prefixIcon;
-  TextEditingController? controller;
-  bool obscureText=false;
-  String? Function(String?)? validator;
-  TextInputType? keyboardType;
-   CustomField({
+  final String hint;
+  final String label;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final TextEditingController? controller;
+  final bool? obscureText;
+  final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
+  const CustomField({
+    super.key,
     required this.hint,
-     this.prefixIcon,
-     this.controller,
-     required this.obscureText,
-     this.validator,
-     this.keyboardType
-});
+    required this.label,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.controller,
+     this.obscureText,
+    this.validator,
+    this.keyboardType,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: keyboardType,
-      cursorColor: Colors.white,
-      style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+      cursorColor: AppColors.white,
+      style: TextStyle(color: AppColors.white),
       decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white,width: 2)
-          ),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white,width: 2)
-          ),
-          hintText: hint,
-          hintStyle: TextStyle(color: AppColors.white),
-          prefixIcon: prefixIcon,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: BorderSide(color: AppColors.white, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: BorderSide(color: AppColors.white, width: 2),
+        ),
+        hintText: hint,
+        labelText: label,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        hintStyle: TextStyle(color: AppColors.textGray),
+        labelStyle: TextStyle(color: AppColors.white),
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon
       ),
-      controller:controller,
-      obscureText: obscureText,
+      controller: controller,
+      obscureText: obscureText ?? false,
       validator: validator,
     );
   }

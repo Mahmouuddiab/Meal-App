@@ -8,76 +8,29 @@ import 'package:meal_app/core/Utils/strings.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_states.dart';
 import 'package:meal_app/features/auth/presentation/screens/base_auth_screen.dart';
-import 'package:meal_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:meal_app/features/auth/presentation/screens/register.dart';
 import 'package:meal_app/features/auth/presentation/widgets/custom_field.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _RegisterState extends State<Register> {
-  final nameController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   bool obscureText = true;
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    nameController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthStates>(
-      listener: (context, state) {
-        if (state is AuthLoading) {
-          DialogFunctions.showLoadingDialog(context, "Loading..");
-        }
-        if (state is AuthFailure) {
-          DialogFunctions.hideLoading(context);
-          DialogFunctions.showMessageDialog(
-            context: context,
-            message: state.message,
-            posActionName: "Ok",
-            title: "Register Fail",
-          );
-        }
-        if (state is AuthSuccess) {
-          DialogFunctions.hideLoading(context);
-          DialogFunctions.showMessageDialog(
-            context: context,
-            message: "success",
-            posActionName: "Ok",
-            title: "Register success",
-          );
-        }
-      },
+      listener: _authListener,
       builder: (context, state) {
         return BaseAuthScreen(
           formFields: [
-            CustomField(
-              keyboardType: TextInputType.text,
-              hint: AppStrings.fullName,
-              label: AppStrings.fullName,
-              prefixIcon: const Icon(
-                Icons.person_outline,
-                color: AppColors.white,
-              ),
-              controller: nameController,
-              validator:
-                  (value) =>
-                      value?.isEmpty ?? true
-                          ? AppStrings.fullNameValidate
-                          : null,
-            ),
-            Gap(15.h),
             CustomField(
               keyboardType: TextInputType.emailAddress,
               hint: AppStrings.email,
@@ -117,29 +70,49 @@ class _RegisterState extends State<Register> {
                 ),
               ),
             ),
-            Gap(10.h),
           ],
-          buttonText: AppStrings.register,
+          buttonText: AppStrings.login,
           onButtonPressed: () {
             if (formKey.currentState?.validate() ?? false) {
               context.read<AuthBloc>().add(
-                AuthSignUp(
+                AuthSignIn(
                   email: emailController.text,
                   password: passwordController.text,
-                  name: nameController.text,
                 ),
               );
             }
           },
-          bottomText: AppStrings.haveAccount,
+          bottomText: AppStrings.doNotHaveAccount,
           onBottomTextPressed:
               () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                MaterialPageRoute(builder: (_) => const Register()),
               ),
-          checkText: AppStrings.termsAndConditions,
+          checkText: AppStrings.rememberMe,
         );
       },
     );
+  }
+
+  void _authListener(BuildContext context, AuthStates state) {
+    if (state is AuthLoading) {
+      DialogFunctions.showLoadingDialog(context, "Loading..");
+    } else if (state is AuthFailure) {
+      DialogFunctions.hideLoading(context);
+      DialogFunctions.showMessageDialog(
+        context: context,
+        message: state.message,
+        posActionName: "Ok",
+        title: "Login Failed",
+      );
+    } else if (state is AuthSuccess) {
+      DialogFunctions.hideLoading(context);
+      DialogFunctions.showMessageDialog(
+        context: context,
+        message: "Successfully logged in!",
+        posActionName: "Ok",
+        title: "Login Success",
+      );
+    }
   }
 }
