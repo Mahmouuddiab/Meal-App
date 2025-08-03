@@ -27,7 +27,27 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthStates>(
-      listener: _authListener,
+      listener: (context, state) {
+        if (state is AuthLoading) {
+          DialogFunctions.showLoadingDialog(context, "Loading..");
+        } else if (state is AuthFailure) {
+          DialogFunctions.hideLoading(context);
+          DialogFunctions.showMessageDialog(
+            context: context,
+            message: state.message,
+            posActionName: "Ok",
+            title: "Login Failed",
+          );
+        } else if (state is AuthSuccess) {
+          DialogFunctions.hideLoading(context);
+          DialogFunctions.showMessageDialog(
+            context: context,
+            message: "Successfully logged in!",
+            posActionName: "Ok",
+            title: "Login Success",
+          );
+        }
+      },
       builder: (context, state) {
         return BaseAuthScreen(
           formFields: [
@@ -46,7 +66,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Gap(15.h),
             CustomField(
-              keyboardType: TextInputType.number,
               hint: AppStrings.password,
               label: AppStrings.password,
               prefixIcon: const Icon(
@@ -92,27 +111,5 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
     );
-  }
-
-  void _authListener(BuildContext context, AuthStates state) {
-    if (state is AuthLoading) {
-      DialogFunctions.showLoadingDialog(context, "Loading..");
-    } else if (state is AuthFailure) {
-      DialogFunctions.hideLoading(context);
-      DialogFunctions.showMessageDialog(
-        context: context,
-        message: state.message,
-        posActionName: "Ok",
-        title: "Login Failed",
-      );
-    } else if (state is AuthSuccess) {
-      DialogFunctions.hideLoading(context);
-      DialogFunctions.showMessageDialog(
-        context: context,
-        message: "Successfully logged in!",
-        posActionName: "Ok",
-        title: "Login Success",
-      );
-    }
   }
 }

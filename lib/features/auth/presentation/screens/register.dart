@@ -93,7 +93,6 @@ class _RegisterState extends State<Register> {
             ),
             Gap(15.h),
             CustomField(
-              keyboardType: TextInputType.number,
               hint: AppStrings.password,
               label: AppStrings.password,
               prefixIcon: const Icon(
