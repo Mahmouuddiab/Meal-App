@@ -1,229 +1,132 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:meal_app/core/Dialogs/dialogs.dart';
 import 'package:meal_app/core/Utils/app_colors.dart';
+import 'package:meal_app/core/Utils/app_validators.dart';
+import 'package:meal_app/core/Utils/strings.dart';
+import 'package:meal_app/core/routing/app_routes.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_states.dart';
-import 'package:meal_app/features/auth/presentation/widgets/custom_button.dart';
+import 'package:meal_app/features/auth/presentation/screens/base_auth_screen.dart';
 import 'package:meal_app/features/auth/presentation/widgets/custom_field.dart';
-import 'package:quickalert/quickalert.dart';
 
 class Register extends StatefulWidget {
-   Register({super.key});
+  const Register({super.key});
 
   @override
   State<Register> createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
-   final nameController = TextEditingController();
-   final emailController = TextEditingController();
-   final passwordController = TextEditingController();
-   var formKey=GlobalKey<FormState>();
-   bool _agreeTerms = false;
-   @override
-   void dispose() {
-     emailController.dispose();
-     passwordController.dispose();
-     nameController.dispose();
-     super.dispose();
-   }
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  var formKey = GlobalKey<FormState>();
+  bool obscureText = true;
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    nameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final w=MediaQuery.of(context).size.width;
-    return BlocConsumer<AuthBloc,AuthStates>(
+    return BlocConsumer<AuthBloc, AuthStates>(
       listener: (context, state) {
-        if(state is AuthLoading){
-         DialogFunctions.showLoadingDialog(context, "Loading..");
+        if (state is AuthLoading) {
+          DialogFunctions.showLoadingDialog(context, "Loading..");
         }
-        if(state is AuthFailure){
+        if (state is AuthFailure) {
           DialogFunctions.hideLoading(context);
           DialogFunctions.showMessageDialog(
-              context: context,
-              message: state.message,
+            context: context,
+            message: state.message,
             posActionName: "Ok",
-            title: "Register Fail"
+            title: "Register Fail",
           );
         }
-        if(state is AuthSuccess){
+        if (state is AuthSuccess) {
           DialogFunctions.hideLoading(context);
           DialogFunctions.showMessageDialog(
-              context: context,
-              message: "success",
-              posActionName: "Ok",
-              title: "Register success"
+            context: context,
+            message: "success",
+            posActionName: "Ok",
+            title: "Register success",
           );
         }
       },
-      builder:(context, state) => Scaffold(
-        backgroundColor: AppColors.primary,
-        body: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 50),
-          decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage("assets/background.png"),fit:BoxFit.cover)
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              key: formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border.all(color: Colors.white,width: 3),
-                        shape: BoxShape.circle,
-                      ),
-                      padding: EdgeInsets.all(25),
-                      child: Image.asset("assets/app_logo.png"),
+      builder:
+          (context, state) => BaseAuthScreen(
+            formKey: formKey,
+            formFields: [
+              CustomField(
+                keyboardType: TextInputType.text,
+                hint: AppStrings.fullName,
+                prefixIcon: Icon(Icons.person_outline, color: AppColors.white),
+                label: AppStrings.fullName,
+                controller: nameController,
+                validator:
+                    (_) =>
+                        AppValidators.displayNamevalidator(nameController.text),
+              ),
+              Gap(15.h),
+              CustomField(
+                keyboardType: TextInputType.emailAddress,
+                hint: AppStrings.email,
+                label: AppStrings.email,
+                prefixIcon: const Icon(
+                  Icons.email_outlined,
+                  color: AppColors.white,
+                ),
+                controller: emailController,
+                validator:
+                    (_) => AppValidators.emailValidator(emailController.text),
+              ),
+              Gap(15.h),
+              CustomField(
+                hint: AppStrings.password,
+                label: AppStrings.password,
+                prefixIcon: const Icon(
+                  Icons.lock_outline,
+                  color: AppColors.white,
+                ),
+                controller: passwordController,
+                obscureText: obscureText,
+                validator:
+                    (_) => AppValidators.passwordValidator(
+                      passwordController.text,
                     ),
-                    SizedBox(height: 80,),
-                    CustomField(
-                      keyboardType: TextInputType.text,
-                      hint: "Full Name",
-                      prefixIcon: Icon(Icons.person,color: AppColors.white,),
-                      controller: nameController,
-                      obscureText: false,
-                      validator: (p0) {
-                        if(nameController.text.isEmpty){
-                          return  "please enter your name";
-                        }
-                        return null;
-                      },
-                    ),
-                    Gap(20),
-                    CustomField(
-                      keyboardType: TextInputType.emailAddress,
-                      hint: "Email",
-                      prefixIcon: Icon(Icons.email,color: AppColors.white,),
-                      controller: emailController,
-                      obscureText: false,
-                      validator: (p0) {
-                        if(emailController.text.isEmpty){
-                          return  "please enter your email";
-                        }
-                        return null;
-                      },
-                    ),
-                    Gap(20),
-                    CustomField(
-                      keyboardType: TextInputType.number,
-                      hint: "Password",
-                      prefixIcon: Icon(Icons.lock_outline,color: AppColors.white,),
-                      controller: passwordController,
-                      obscureText: true,
-                      validator: (p0) {
-                        if(passwordController.text.isEmpty){
-                          return  "please enter your password";
-                        }
-                        return null;
-                      },
-                    ),
-                    Gap(20),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: _agreeTerms,
-                          onChanged: (value) {
-                            setState(() {
-                              _agreeTerms = value ?? false;
-                            });
-                          },
-                          activeColor: Colors.white,
-                          checkColor: Colors.indigo,
-                        ),
-                        const Expanded(
-                          child: Text(
-                            "By creating an account you agree to terms and conditions.",
-                            style: TextStyle(color: Colors.white, fontSize: 12,fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Gap(20),
-                    CustomButton(
-                        onPressed: (){
-                          if(formKey.currentState!.validate()){
-                            context.read<AuthBloc>().add(
-                              AuthSignUp(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                  name: nameController.text)
-                            );
-                          }
-                        },
-                        child: Text("Register",style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold
-                        ),)
-                    ),
-                    Gap(25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 10,
-                      children: [
-                        Container(
-                          height: 2,
-                          width: w*0.28,
-                          color: Colors.white,
-                        ),
-                        Text("or login with",style: TextStyle(
-                            color: AppColors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15
-                        ),),
-                        Container(
-                          height: 2,
-                          width: w*0.28,
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
-                    Gap(25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 20,
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              color: Colors.indigo,
-                              shape: BoxShape.circle,
-                              image: DecorationImage(image: AssetImage("assets/facebook.png"))
-                          ),
-                        ),
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              image: DecorationImage(image: AssetImage("assets/google.png"))
-                          ),
-                        ),
-                      ],
-                    ),
-                    Gap(25),
-                    TextButton(
-                        onPressed: (){},
-                        child: Text("Do you have account? Login",style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                        ),)
-                    )
-                  ],
+                suffixIcon: IconButton(
+                  onPressed: () => setState(() => obscureText = !obscureText),
+                  icon: Icon(
+                    obscureText
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                    color: AppColors.white,
+                  ),
                 ),
               ),
-            ),
+            ],
+            buttonText: AppStrings.register,
+            onButtonPressed: () {
+              if (formKey.currentState?.validate() ?? false) {
+                context.read<AuthBloc>().add(
+                  AuthSignIn(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  ),
+                );
+              }
+            },
+            bottomText: AppStrings.haveAccount,
+            onBottomTextPressed:
+                () => Navigator.pushNamed(context, AppRoutes.login),
+            checkText: AppStrings.termsAndConditions,
           ),
-        ),
-      ) ,
     );
   }
 }
