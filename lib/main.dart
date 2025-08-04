@@ -6,7 +6,6 @@ import 'package:meal_app/core/locator/service_locator.dart';
 import 'package:meal_app/core/routing/app_router.dart';
 import 'package:meal_app/core/routing/app_routes.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:meal_app/features/auth/presentation/screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,24 +29,25 @@ class MyApp extends StatelessWidget {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: MaterialApp(
-        theme: ThemeData(
-          textSelectionTheme: TextSelectionThemeData(
-            cursorColor: AppColors.white,
-            selectionColor: AppColors.gray.withOpacity(0.7),
-            selectionHandleColor: AppColors.white,
+      builder: (context, child) {
+        return MaterialApp(
+          theme: ThemeData(
+            textSelectionTheme: TextSelectionThemeData(
+              cursorColor: AppColors.white,
+              selectionColor: AppColors.gray.withOpacity(0.7),
+              selectionHandleColor: AppColors.white,
+            ),
+            primaryColor: AppColors.primary,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.primary,
+              primary: AppColors.primary,
+            ),
           ),
-          primaryColor: AppColors.primary,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: AppColors.primary,
-            primary: AppColors.primary,
-          ),
-        ),
-        initialRoute: AppRoutes.login,
-        onGenerateRoute: AppRouter.generateRoute,
-        debugShowCheckedModeBanner: false,
-        home: LoginScreen(),
-      ),
+          initialRoute: AppRoutes.login,
+          onGenerateRoute: AppRouter.generateRoute,
+          debugShowCheckedModeBanner: false,
+        );
+      },
     );
   }
 }
