@@ -9,6 +9,7 @@ import 'package:meal_app/features/auth/presentation/bloc/auth_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await initDependices();
   runApp(
     MultiBlocProvider(
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
               primary: AppColors.primary,
             ),
           ),
-          initialRoute: AppRoutes.login,
+          initialRoute: AppRoutes.onboarding,
           onGenerateRoute: AppRouter.generateRoute,
           debugShowCheckedModeBanner: false,
         );
