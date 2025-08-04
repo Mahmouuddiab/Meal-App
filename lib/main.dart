@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meal_app/core/Utils/app_colors.dart';
 import 'package:meal_app/core/locator/service_locator.dart';
 import 'package:meal_app/core/routing/app_router.dart';
 import 'package:meal_app/core/routing/app_routes.dart';
@@ -30,6 +31,18 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: MaterialApp(
+        theme: ThemeData(
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: AppColors.white,
+            selectionColor: AppColors.gray.withOpacity(0.7),
+            selectionHandleColor: AppColors.white,
+          ),
+          primaryColor: AppColors.primary,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primary,
+            primary: AppColors.primary,
+          ),
+        ),
         initialRoute: AppRoutes.login,
         onGenerateRoute: AppRouter.generateRoute,
         debugShowCheckedModeBanner: false,
