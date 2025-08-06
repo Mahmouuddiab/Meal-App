@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
               primary: AppColors.primary,
             ),
           ),
-          initialRoute: AppRoutes.onboarding,
+          initialRoute: AppRoutes.splash,
           onGenerateRoute: AppRouter.generateRoute,
           debugShowCheckedModeBanner: false,
         );
