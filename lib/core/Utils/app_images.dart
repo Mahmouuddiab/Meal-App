@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class AppImages {
   static String logo = "assets/images/logo.png";
   static String onboarding1 = "assets/images/onboarding1.png";
@@ -5,4 +7,5 @@ class AppImages {
   static String google = "assets/images/Google.png";
   static String facebook = "assets/images/facebook.png";
   static String authBackgroung = "assets/images/auth_background.png";
+  static String CookerLogo = "assets/images/cookerLogo.png";
 }
