@@ -32,17 +32,17 @@ class CustomField extends StatelessWidget {
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: AppColors.white, width: 1),
+          borderSide: BorderSide(color: AppColors.gray, width: 1.5.w),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: AppColors.white, width: 2),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5.w),
         ),
         hintText: hint,
         labelText: label,
         floatingLabelBehavior: FloatingLabelBehavior.never,
-        hintStyle: TextStyle(color: AppColors.textGray),
-        labelStyle: TextStyle(color: AppColors.white),
+        hintStyle: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w600),
+        labelStyle: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w600),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon
       ),
