@@ -33,18 +33,23 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           theme: ThemeData(
-            textSelectionTheme: TextSelectionThemeData(
-              cursorColor: AppColors.white,
-              selectionColor: AppColors.gray.withOpacity(0.7),
-              selectionHandleColor: AppColors.white,
+            appBarTheme: AppBarTheme(
+              iconTheme: IconThemeData(
+                color: AppColors.primary
+              )
             ),
-            primaryColor: AppColors.primary,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: AppColors.primary,
-              primary: AppColors.primary,
-            ),
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+              selectedIconTheme: IconThemeData(
+                color: AppColors.white,
+                size: 30
+              ),
+              unselectedIconTheme: IconThemeData(
+                color: AppColors.primary,
+                size: 30
+              ),
+            )
           ),
-          initialRoute: AppRoutes.splash,
+          initialRoute: AppRoutes.layout,
           onGenerateRoute: AppRouter.generateRoute,
           debugShowCheckedModeBanner: false,
         );
