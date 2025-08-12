@@ -1,5 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:meal_app/core/secrets/app_secrets.dart';
+import 'package:meal_app/features/Home/Data/Datasource/HomeDataSource.dart';
+import 'package:meal_app/features/Home/Data/Repository/Repository.dart';
+import 'package:meal_app/features/Home/Domain/Repository/Repository.dart';
+import 'package:meal_app/features/Home/presentation/Cubit/home_cubit.dart';
 import 'package:meal_app/features/auth/data/dataSource/auth_remote_data_source.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,41 +18,49 @@ final serviceLocator = GetIt.instance;
 
 Future<void> initDependices() async {
   final supabse = await Supabase.initialize(
-      url: AppSecrets.supabaseUrl, anonKey: AppSecrets.anonKey);
+    url: AppSecrets.supabaseUrl,
+    anonKey: AppSecrets.anonKey,
+  );
   serviceLocator.registerSingleton<SupabaseClient>(supabse.client);
   initAuth();
 
+  initHome();
 }
 
 void initAuth() {
   // Data source
   serviceLocator
     ..registerFactory<AuthRemoteDataSource>(
-          () => AuthRemoteDataSourceImpl(serviceLocator()),
+      () => AuthRemoteDataSourceImpl(serviceLocator()),
     )
-  // Repository
-    ..registerFactory<AuthRepository>(() => AuthRepositoryImpl(serviceLocator()))
-  // Use-cases
-    ..registerFactory(
-          () => UserSignUp(
-        serviceLocator(),
+    // Repository
+    ..registerFactory<AuthRepository>(
+      () => AuthRepositoryImpl(serviceLocator()),
+    )
+    // Use-cases
+    ..registerFactory(() => UserSignUp(serviceLocator()))
+    ..registerFactory(() => UserSignIn(serviceLocator()))
+    ..registerFactory(() => CurrentUser(serviceLocator()))
+    // Bloc
+    ..registerLazySingleton(
+      () => AuthBloc(
+        currentUser: serviceLocator(),
+        userSignUp: serviceLocator(),
+        userSignIn: serviceLocator(),
       ),
-    )
-    ..registerFactory(
-          () => UserSignIn(
-        serviceLocator(),
-      ),
-    )
-    ..registerFactory(
-          () => CurrentUser(
-        serviceLocator(),
-      ),
-    )
-  // Bloc
-    ..registerLazySingleton(() =>
-        AuthBloc(currentUser:serviceLocator() ,userSignUp: serviceLocator(), userSignIn: serviceLocator()));
-
-
-
+    );
 }
 
+void initHome() {
+  serviceLocator
+    // Repository
+    ..registerFactory<MealsRepository>(
+      () => MealsRepositoryImpl(serviceLocator()),
+    )
+    // Cubit
+    ..registerFactory<HomeCubit>(() => (HomeCubit(serviceLocator())))
+    //FavoritesRemoteDataSource
+    ..registerFactory<MealsRemoteDataSource>(
+      () => MealsRemoteDataSource(serviceLocator()),
+    );
+}

@@ -5,16 +5,18 @@ import 'package:meal_app/core/Utils/app_colors.dart';
 import 'package:meal_app/core/locator/service_locator.dart';
 import 'package:meal_app/core/routing/app_router.dart';
 import 'package:meal_app/core/routing/app_routes.dart';
+import 'package:meal_app/features/Home/presentation/Cubit/home_cubit.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await initDependices();
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (context) => serviceLocator<HomeCubit>()),
+
       ],
       child: const MyApp(),
     ),
