@@ -49,7 +49,11 @@ class CustomCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 41.r,
-                  backgroundImage: AssetImage(AppImages.onboarding1),
+                  backgroundColor: AppColors.white,
+                  backgroundImage:
+                      meal.imageUrl == ""
+                          ? AssetImage(AppImages.noImage)
+                          : NetworkImage(meal.imageUrl),
                 ),
                 SizedBox(width: 15.w),
                 Expanded(
@@ -81,24 +85,26 @@ class CustomCard extends StatelessWidget {
                           Spacer(),
                           IconButton(
                             onPressed: () async {
-                              final user = Supabase.instance.client.auth.currentUser;
+                              final user =
+                                  Supabase.instance.client.auth.currentUser;
                               if (user?.id != null) {
                                 await context
                                     .read<FavoritesCubit>()
                                     .toggleFavorite(user!.id, meal);
                               }
                             },
-                            icon: isFavorite
-                                ? Icon(
-                                    Icons.favorite,
-                                    color: AppColors.primary,
-                                    size: 26.h,
-                                  )
-                                : Icon(
-                                    Icons.favorite_outline,
-                                    color: AppColors.unselectedGray,
-                                    size: 26.h,
-                                  ),
+                            icon:
+                                isFavorite
+                                    ? Icon(
+                                      Icons.favorite,
+                                      color: AppColors.primary,
+                                      size: 26.h,
+                                    )
+                                    : Icon(
+                                      Icons.favorite_outline,
+                                      color: AppColors.unselectedGray,
+                                      size: 26.h,
+                                    ),
                           ),
                         ],
                       ),
