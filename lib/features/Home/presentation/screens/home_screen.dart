@@ -2,22 +2,38 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:meal_app/core/Models/Meal_Model.dart';
 import 'package:meal_app/core/Utils/app_colors.dart';
-import 'package:meal_app/core/Widgets/customCard.dart';
-import 'package:meal_app/core/locator/service_locator.dart';
-import 'package:meal_app/features/Home/Domain/Repository/Repository.dart';
+import 'package:meal_app/core/Widgets/custom_card.dart';
+// import 'package:meal_app/core/locator/service_locator.dart';
+// import 'package:meal_app/features/Home/Domain/Repository/Repository.dart';
 import 'package:meal_app/features/Home/presentation/Cubit/home_cubit.dart';
 import 'package:meal_app/features/auth/presentation/widgets/custom_field.dart';
+import 'package:meal_app/features/favorites/presentation/cubit/favorites_cubit.dart';
+import 'package:meal_app/features/favorites/presentation/cubit/favorites_state.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) {
-        return HomeCubit(serviceLocator<MealsRepository>())..fetchItems();
+    final user = Supabase.instance.client.auth.currentUser;
+    final userId = user?.id;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (userId != null) {
+        context.read<FavoritesCubit>().loadFavorites(userId);
+        context.read<HomeCubit>().fetchItems();
+      }
+    });
+
+    return BlocListener<FavoritesCubit, FavoritesState>(
+      listener: (context, state) {
+        if (state is FavoritesLoaded) {
+          print('Favorites loaded, triggering UI refresh');
+          // Force rebuild of the entire widget tree if needed
+          (context as Element).markNeedsBuild();
+        }
       },
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
@@ -26,7 +42,7 @@ class HomeScreen extends StatelessWidget {
           } else if (state is HomeError) {
             return Center(child: Text(state.message));
           } else if (state is HomeLoaded) {
-            final meals = state.items;
+            // final meals = state.items;
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -95,12 +111,31 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-            
+
                   Expanded(
                     child: ListView.builder(
-                      itemCount: state.items.length,
+                      itemCount: state.meals.length,
                       itemBuilder: (context, index) {
-                        return CustomFavoritesCard(meal: Meal.fromJson(state.items[index] as Map<dynamic, dynamic>),);
+                        print(state.meals[index].id);
+                        final meal = state.meals[index];
+                        return CustomCard(
+                          meal: meal,
+                          onPressed: () async {
+                            if (userId != null) {
+                              await context
+                                  .read<FavoritesCubit>()
+                                  .toggleFavorite(userId, meal);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Please sign in to add favorites',
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        );
                       },
                     ),
                   ),
