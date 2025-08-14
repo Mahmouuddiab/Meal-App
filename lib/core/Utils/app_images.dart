@@ -8,4 +8,5 @@ class AppImages {
   static String facebook = "assets/images/facebook.png";
   static String authBackgroung = "assets/images/auth_background.png";
   static String CookerLogo = "assets/images/cookerLogo.png";
+  static String noImage = "assets/images/Shawarma-rafiki.png";
 }
