@@ -1,7 +1,8 @@
-import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:meal_app/features/layout/presentation/favoriteTab/screens/favorite_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+
 import 'package:meal_app/features/Home/presentation/screens/home_screen.dart';
+import 'package:meal_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:meal_app/features/layout/presentation/layout/cubit/layout_states.dart';
 import 'package:meal_app/features/layout/presentation/profileTab/screens/profile_screen.dart';
 
@@ -22,3 +23,5 @@ class LayoutCubit extends Cubit<LayoutStates>{
   }
 
 }
+
+

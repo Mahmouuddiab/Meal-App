@@ -5,7 +5,10 @@ import 'package:meal_app/features/Home/Data/Repository/Repository.dart';
 import 'package:meal_app/features/Home/Domain/Repository/Repository.dart';
 import 'package:meal_app/features/Home/presentation/Cubit/home_cubit.dart';
 import 'package:meal_app/features/auth/data/dataSource/auth_remote_data_source.dart';
-import 'package:meal_app/features/auth/domain/usecases/update_user_profile.dart';
+import 'package:meal_app/features/favorites/data/data_sources/favorites_remote_data_source.dart';
+import 'package:meal_app/features/favorites/data/repository/favorites_repository_impl.dart';
+import 'package:meal_app/features/favorites/domain/repositories/favorite_repository.dart';
+import 'package:meal_app/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/auth/data/repository/auth_repository_impl.dart';
@@ -13,6 +16,7 @@ import '../../features/auth/domain/repository/auth_repository.dart';
 import '../../features/auth/domain/usecases/current_user.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecse.dart';
+import '../../features/auth/domain/usecases/update_user_profile.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 
 final serviceLocator = GetIt.instance;
@@ -23,33 +27,29 @@ Future<void> initDependices() async {
     anonKey: AppSecrets.anonKey,
   );
   serviceLocator.registerSingleton<SupabaseClient>(supabse.client);
-
-
-  //serviceLocator.registerSingleton<CacheHelper>(CacheHelper());
-
   initAuth();
 
   initHome();
+  initFavorites();
 }
-
 
 void initAuth() {
   // Data source
   serviceLocator
-    ..registerLazySingleton<AuthRemoteDataSource>(
+    ..registerFactory<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(serviceLocator()),
     )
     // Repository
-    ..registerLazySingleton<AuthRepository>(
+    ..registerFactory<AuthRepository>(
       () => AuthRepositoryImpl(serviceLocator()),
     )
     // Use-cases
-    ..registerLazySingleton(() => UserSignUp(serviceLocator()))
-    ..registerLazySingleton(() => UserSignIn(serviceLocator()))
-    ..registerLazySingleton(() => CurrentUser(serviceLocator()))
+    ..registerFactory(() => UserSignUp(serviceLocator()))
+    ..registerFactory(() => UserSignIn(serviceLocator()))
+    ..registerFactory(() => CurrentUser(serviceLocator()))
     ..registerLazySingleton(() => UpdateUserProfile(repo: serviceLocator()))
     // Bloc
-    ..registerFactory(
+    ..registerLazySingleton(
       () => AuthBloc(
         currentUser: serviceLocator(),
         userSignUp: serviceLocator(),
@@ -62,13 +62,27 @@ void initAuth() {
 void initHome() {
   serviceLocator
     // Repository
-    ..registerLazySingleton<MealsRepository>(
+    ..registerFactory<MealsRepository>(
       () => MealsRepositoryImpl(serviceLocator()),
     )
     // Cubit
     ..registerFactory<HomeCubit>(() => (HomeCubit(serviceLocator())))
     //FavoritesRemoteDataSource
-    ..registerLazySingleton<MealsRemoteDataSource>(
+    ..registerFactory<MealsRemoteDataSource>(
       () => MealsRemoteDataSource(serviceLocator()),
+    );
+}
+
+void initFavorites() {
+  serviceLocator
+    // Repository
+    ..registerFactory<FavoritesRepository>(
+      () => FavoritesRepositoryImpl(remoteDataSource: serviceLocator()),
+    )
+    // Cubit
+    ..registerFactory<FavoritesCubit>(() => FavoritesCubit(serviceLocator()))
+    //FavoritesRemoteDataSource
+    ..registerFactory<FavoritesRemoteDataSource>(
+      () => FavoritesRemoteDataSource(serviceLocator()),
     );
 }

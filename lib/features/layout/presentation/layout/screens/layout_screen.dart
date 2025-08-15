@@ -7,49 +7,41 @@ import 'package:meal_app/features/layout/presentation/layout/cubit/layout_states
 import 'package:meal_app/features/layout/presentation/layout/widget/custom_bottom_nav_bar_item.dart';
 
 class LayoutScreen extends StatelessWidget {
-
-  const LayoutScreen({
-    super.key
-  });
-
-
-
- 
-   
+  LayoutScreen({super.key});
+  final LayoutCubit layoutCubit = serviceLocator<LayoutCubit>();
   @override
   Widget build(BuildContext context) {
-    LayoutCubit layoutCubit = serviceLocator<LayoutCubit>();
     return BlocProvider(
       create: (_) => layoutCubit,
-      child: BlocBuilder<LayoutCubit,LayoutStates>(
-        builder: (context, state) =>
-            Scaffold(
+      child: BlocBuilder<LayoutCubit, LayoutStates>(
+        builder:
+            (context, state) => Scaffold(
               backgroundColor: AppColors.white,
               appBar: AppBar(
                 backgroundColor: AppColors.white,
                 elevation: 0,
-                leading: Icon(Icons.menu,size: 30),
+                leading: Icon(Icons.menu, size: 30),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Icon(Icons.notifications,size: 30,),
-                  )
+                    child: Icon(Icons.notifications, size: 30),
+                  ),
                 ],
               ),
               body: layoutCubit.tabs[layoutCubit.currentIndex],
               bottomNavigationBar: BottomNavigationBar(
-                onTap: (value)=> layoutCubit.changeBottomIndex(value),
+                onTap: (value) => layoutCubit.changeBottomIndex(value),
                 elevation: 0,
-                 backgroundColor: AppColors.white,
-                 type: BottomNavigationBarType.fixed,
-                 currentIndex: layoutCubit.currentIndex,
-                  showUnselectedLabels: false,
-                  showSelectedLabels: false,
-                  items: [
-                    CustomBottomNavBarItem(Icon(Icons.home), "Home"),
-                    CustomBottomNavBarItem(Icon(Icons.favorite_border), "Favorite"),
-                    CustomBottomNavBarItem(Icon(Icons.person), "Profile"),
-                  ]
+                backgroundColor: AppColors.white,
+                type: BottomNavigationBarType.fixed,
+                currentIndex: layoutCubit.currentIndex,
+                showUnselectedLabels: false,
+                showSelectedLabels: false,
+                items: [
+                  CustomBottomNavBarItem(Icon(Icons.home), "Home"),
+                  CustomBottomNavBarItem(Icon(Icons.favorite_border), "Favorite"),
+                  CustomBottomNavBarItem(Icon(Icons.person), "Profile"),
+                ],
               ),
             ),
       ),

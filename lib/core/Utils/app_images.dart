@@ -8,6 +8,6 @@ class AppImages {
   static const String facebook = "assets/images/facebook.png";
   static const String authBackgroung = "assets/images/auth_background.png";
   static const String cookerLogo = "assets/images/cookerLogo.png";
-  static const String burger = "assets/images/burger.png";
-  static const  String defaultUserImage = "assets/images/user.png";
+  static const String noImage = "assets/images/Shawarma-rafiki.png";
+  static const String defaultUserImage = "assets/images/user.png";
 }
