@@ -11,6 +11,7 @@ class CustomField extends StatelessWidget {
   final bool? obscureText;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
+  final TextStyle? style;
   const CustomField({
     super.key,
     required this.hint,
@@ -21,34 +22,45 @@ class CustomField extends StatelessWidget {
      this.obscureText,
     this.validator,
     this.keyboardType,
+    this.style
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      
       keyboardType: keyboardType,
-      cursorColor: AppColors.white,
-      style: TextStyle(color: AppColors.white),
+      cursorColor: AppColors.primary,
+      style: style,
       decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: BorderSide(color: AppColors.gray, width: 1.5.w),
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
           borderSide: BorderSide(color: AppColors.gray, width: 1.5.w),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: AppColors.primary, width: 1.5.w),
+          borderSide: BorderSide(color: AppColors.gray, width: 1.5.w),
         ),
         hintText: hint,
         labelText: label,
         floatingLabelBehavior: FloatingLabelBehavior.never,
-        hintStyle: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w600),
-        labelStyle: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w600),
+        hintStyle: style?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+        labelStyle: style?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon
       ),
       controller: controller,
       obscureText: obscureText ?? false,
       validator: validator,
+      
     );
   }
 }

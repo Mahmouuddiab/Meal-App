@@ -7,10 +7,19 @@ abstract interface class AuthRepository {
     required String name,
     required String email,
     required String password,
+    required String phone
   });
   Future<Either<Failure, User>> loginWithEmailPassword({
     required String email,
     required String password,
   });
   Future<Either<Failure, User>> currentUser();
+
+  Future<Either<Failure, User>> upadteUserProfile({
+    required String name,
+    required String email,
+    required String password,
+    required String phone,
+    required String imageURL,
+  });
 }

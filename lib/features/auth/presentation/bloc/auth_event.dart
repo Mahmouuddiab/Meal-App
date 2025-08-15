@@ -6,7 +6,13 @@ final class AuthSignUp extends AuthEvent{
   final String email;
   final String name;
   final String password;
-  AuthSignUp({required this.email,required this.password,required this.name});
+  final String phone;
+  AuthSignUp({
+    required this.email,
+    required this.password,
+    required this.name,
+    required this.phone,
+  });
 }
 
 final class AuthSignIn extends AuthEvent{
@@ -17,4 +23,20 @@ final class AuthSignIn extends AuthEvent{
 
 final class AuthIsUserLoggedIn extends AuthEvent{
 
+}
+
+class AuthUpdateUserData extends AuthEvent{
+
+  final String email;
+  final String name;
+  final String password;
+  final String phone;
+  final String imageURL;
+  AuthUpdateUserData({
+  required this.email,
+  required this.password,
+  required this.name,
+  required this.phone,
+  required this.imageURL,
+  });
 }

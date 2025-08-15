@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/core/locator/service_locator.dart';
 import 'package:meal_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:meal_app/features/auth/presentation/screens/register.dart';
+import 'package:meal_app/features/layout/presentation/layout/cubit/layout_cubit.dart';
 import 'package:meal_app/features/layout/presentation/layout/screens/layout_screen.dart';
 import 'package:meal_app/features/on_boarding_feature/presentation/screens/SplahScreen.dart';
 import 'package:meal_app/features/on_boarding_feature/presentation/screens/on_boarding_screen.dart';
+import '../../features/auth/domain/entities/user.dart';
 import 'app_routes.dart';
 
 class AppRouter {
@@ -18,6 +21,10 @@ class AppRouter {
       case AppRoutes.onboarding:
         return MaterialPageRoute(builder: (_) => const OnBoardingScreen());
       case AppRoutes.layout:
+        final user = settings.arguments as User;
+        serviceLocator.registerLazySingleton<LayoutCubit>(
+          ()=> LayoutCubit(currentUser: user)
+        );
         return MaterialPageRoute(builder: (_) =>  LayoutScreen()) ;
       default:
         return MaterialPageRoute(
