@@ -8,12 +8,25 @@ abstract interface class AuthRemoteDataSource {
     required String name,
     required String email,
     required String password,
+    required String phone
   });
   Future<UserModel> loginWithEmailPassword({
     required String email,
     required String password,
   });
   Future<UserModel?> getCurrentUserData();
+
+  Future<UserModel> updateUserProfile(
+    {
+     required String name,
+     required String email,
+     required String password, 
+     required String phone, 
+     required String imageURL
+    }
+  );
+
+
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -36,6 +49,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.user == null) {
         throw const ServerException('User is null!');
       }
+      
+      print(response.user!.toJson());
       return UserModel.fromJson(response.user!.toJson());
     } on AuthException catch (e) {
       throw ServerException(e.message);
@@ -49,6 +64,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String name,
     required String email,
     required String password,
+    required String phone,
   }) async {
     try {
       final response = await supabaseClient.auth.signUp(
@@ -56,6 +72,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         email: email,
         data: {
           'name': name,
+          "phone" : phone,
+          "imageURL" : "",
+          "password" : password
         },
       );
       if (response.user == null) {
@@ -71,20 +90,77 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel?> getCurrentUserData() async {
-    try {
-      if (currentUserSession != null) {
-        final userData = await supabaseClient.from('profiles').select().eq(
-          'id',
-          currentUserSession!.user.id,
-        );
-        return UserModel.fromJson(userData.first).copyWith(
-          email: currentUserSession!.user.email,
-        );
-      }
+    final user = supabaseClient.auth.currentUser;
 
-      return null;
-    } catch (e) {
-      throw ServerException(e.toString());
+    if(user != null){
+      return UserModel.fromJson(user.toJson());
     }
+
+    return null;
+    
+    // try {
+    //   if (currentUserSession != null) {
+    //     final userData = await supabaseClient.from('profiles').select().eq(
+    //       'id',
+    //       currentUserSession!.user.id,
+    //     );
+    //     return UserModel.fromJson(userData.first).copyWith(
+    //       email: currentUserSession!.user.email,
+    //     );
+    //   }
+
+    //   return null;
+    // } catch (e) {
+    //   throw ServerException(e.toString());
+    // }
   }
+  
+  @override
+Future<UserModel> updateUserProfile({
+  required String name,
+  required String email,
+  required String password,
+  required String phone,
+  required String imageURL,
+}) async {
+  final currentUser = await getCurrentUserData();
+
+  if (currentUser == null) {
+    throw ServerException('No current user found');
+  }
+
+  try {
+    // Build only changed metadata fields
+    final Map<String, dynamic> updatedMetadata = {};
+
+    if (name != currentUser.name) {
+      updatedMetadata["name"] = name;
+    }
+    if (phone != currentUser.phone) {
+      updatedMetadata["phone"] = phone;
+    }
+    if (imageURL != currentUser.imageURL) {
+      updatedMetadata["imageURL"] = imageURL;
+    }
+
+    // (Optional) Storing password in metadata is not secure or recommended.
+    if (password != currentUser.pass) {
+      updatedMetadata["password"] = password;
+    }
+
+    // Prepare UserAttributes only with changed data
+    final userAttributes = UserAttributes(
+      email: email != currentUser.email ? email : null,
+      password: password != currentUser.pass ? password : null,
+      data: updatedMetadata.isNotEmpty ? updatedMetadata : null,
+    );
+
+    final response = await supabaseClient.auth.updateUser(userAttributes);
+
+    return UserModel.fromJson(response.user!.toJson());
+  } catch (e) {
+    throw ServerException(e.toString());
+  }
+}
+
 }

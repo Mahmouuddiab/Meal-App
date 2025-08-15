@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
             shape: BoxShape.circle,
             border: Border.all(color: Colors.white, width: 3),
           ),
-          child: Image.asset(AppImages.CookerLogo),
+          child: Image.asset(AppImages.cookerLogo),
         ),
       ),
     );

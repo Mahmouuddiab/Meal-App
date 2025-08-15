@@ -10,7 +10,9 @@ import 'package:meal_app/core/routing/app_routes.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_states.dart';
 import 'package:meal_app/features/auth/presentation/screens/base_auth_screen.dart';
-import 'package:meal_app/features/auth/presentation/widgets/custom_field.dart';
+
+import '../../../../core/Widgets/custom_field.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,29 +40,24 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state is AuthLoading) {
           DialogFunctions.showLoadingDialog(context, "Loading..");
         }
-        if (state is AuthFailure) {
+        else if (state is AuthFailure) {
           DialogFunctions.hideLoading(context);
           DialogFunctions.showMessageDialog(
             context: context,
             message: state.message,
             posActionName: "Ok",
-            posAction: () {
-              Navigator.pop(context);
-            },
             title: "Login Fail",
           );
         }
-        if (state is AuthSuccess) {
+        else if (state is AuthSuccess) {
           DialogFunctions.hideLoading(context);
           DialogFunctions.showMessageDialog(
             context: context,
             message: "success",
             posActionName: "Ok",
-            posAction: () {
-              Navigator.pop(context);
-            },
             title: "Login success",
           );
+          Navigator.pushReplacementNamed(context, AppRoutes.layout , arguments: state.user);
         }
       },
       builder: (context, state) {
@@ -71,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
               keyboardType: TextInputType.emailAddress,
               hint: AppStrings.email,
               label: AppStrings.email,
+              style: TextStyle(color: AppColors.white),
               prefixIcon: const Icon(
                 Icons.email_outlined,
                 color: AppColors.white,
@@ -83,6 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
             CustomField(
               hint: AppStrings.password,
               label: AppStrings.password,
+              style: TextStyle(color: AppColors.white),
               prefixIcon: const Icon(
                 Icons.lock_outline,
                 color: AppColors.white,
@@ -105,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
           buttonText: AppStrings.login,
           onButtonPressed: () {
-            if (formKey.currentState?.validate() ?? false) {
+            if (formKey.currentState!.validate()) {
               context.read<AuthBloc>().add(
                 AuthSignIn(
                   email: emailController.text,

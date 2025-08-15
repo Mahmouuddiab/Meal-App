@@ -1,11 +1,13 @@
 // ignore_for_file: non_constant_identifier_names
 
 class AppImages {
-  static String logo = "assets/images/logo.png";
-  static String onboarding1 = "assets/images/onboarding1.png";
-  static String onboarding2 = "assets/images/onboarding2.png";
-  static String google = "assets/images/Google.png";
-  static String facebook = "assets/images/facebook.png";
-  static String authBackgroung = "assets/images/auth_background.png";
-  static String CookerLogo = "assets/images/cookerLogo.png";
+  static const String logo = "assets/images/logo.png";
+  static const String onboarding1 = "assets/images/onboarding1.png";
+  static const String onboarding2 = "assets/images/onboarding2.png";
+  static const String google = "assets/images/Google.png";
+  static const String facebook = "assets/images/facebook.png";
+  static const String authBackgroung = "assets/images/auth_background.png";
+  static const String cookerLogo = "assets/images/cookerLogo.png";
+  static const String burger = "assets/images/burger.png";
+  static const  String defaultUserImage = "assets/images/user.png";
 }

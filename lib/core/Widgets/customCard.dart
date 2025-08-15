@@ -33,7 +33,7 @@ class CustomFavoritesCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 41.r,
-              backgroundImage: AssetImage(meal.imageUrl),
+              backgroundImage: AssetImage(AppImages.burger), //AssetImage(meal.imageUrl),
             ),
             SizedBox(width: 15.w),
             Column(

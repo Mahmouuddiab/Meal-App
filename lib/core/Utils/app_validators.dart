@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class AppValidators {
   static String? displayNamevalidator(String? displayName) {
     if (displayName == null || displayName.isEmpty) {
@@ -24,7 +22,7 @@ class AppValidators {
     return null;
   }
 
-  static String? phoneValidator(String? value, BuildContext context) {
+  static String? phoneValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter a phone';
     }

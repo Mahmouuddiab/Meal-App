@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:meal_app/features/Home/Domain/Repository/Repository.dart';
-import 'package:meta/meta.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'home_state.dart';

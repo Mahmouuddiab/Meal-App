@@ -8,7 +8,8 @@ import 'package:meal_app/core/Widgets/customCard.dart';
 import 'package:meal_app/core/locator/service_locator.dart';
 import 'package:meal_app/features/Home/Domain/Repository/Repository.dart';
 import 'package:meal_app/features/Home/presentation/Cubit/home_cubit.dart';
-import 'package:meal_app/features/auth/presentation/widgets/custom_field.dart';
+
+import '../../../../core/Widgets/custom_field.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -98,9 +99,9 @@ class HomeScreen extends StatelessWidget {
             
                   Expanded(
                     child: ListView.builder(
-                      itemCount: state.items.length,
+                      itemCount: meals.length,
                       itemBuilder: (context, index) {
-                        return CustomFavoritesCard(meal: Meal.fromJson(state.items[index] as Map<dynamic, dynamic>),);
+                        return CustomFavoritesCard(meal: Meal.fromJson(meals[index] as Map<dynamic, dynamic>),);
                       },
                     ),
                   ),

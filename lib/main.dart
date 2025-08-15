@@ -15,6 +15,8 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => serviceLocator<AuthBloc>()),
+        
+        // it should be wrapped around the home tab widget 
         BlocProvider(create: (context) => serviceLocator<HomeCubit>()),
 
       ],
@@ -51,7 +53,7 @@ class MyApp extends StatelessWidget {
               ),
             )
           ),
-          initialRoute: AppRoutes.layout,
+          initialRoute:AppRoutes.splash,
           onGenerateRoute: AppRouter.generateRoute,
           debugShowCheckedModeBanner: false,
         );
