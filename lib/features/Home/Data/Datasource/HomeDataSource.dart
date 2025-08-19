@@ -1,11 +1,11 @@
-import 'package:meal_app/core/Models/Meal_Model.dart';
+import 'package:meal_app/core/Models/meal_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MealsRemoteDataSource {
   final SupabaseClient supabase;
   MealsRemoteDataSource(this.supabase);
 
-  // Get all meals (you can filter later if needed)
+  // Get all meals
   Future<List<Meal>> getMeals() async {
     final res = await supabase
         .from('meals')
@@ -18,7 +18,7 @@ class MealsRemoteDataSource {
         .toList();
   }
 
-  /// Check if a meal is a favorite for a specific user
+  // Check if a meal is a favorite for a specific user
   Future<bool> isFavorite(String userId, String mealId) async {
     final res =
         await supabase
