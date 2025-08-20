@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:meal_app/core/Models/Meal_Model.dart';
+import 'package:meal_app/core/Models/meal_model.dart';
 import 'package:meal_app/features/Home/Domain/Repository/Repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

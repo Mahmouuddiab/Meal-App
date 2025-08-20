@@ -1,5 +1,5 @@
 
-import 'package:meal_app/core/Models/Meal_Model.dart';
+import 'package:meal_app/core/Models/meal_model.dart';
 
 abstract class MealsRepository {
   Future<List<Meal>>getMeals();

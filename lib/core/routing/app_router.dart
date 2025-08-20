@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/core/Models/meal_model.dart';
+import 'package:meal_app/features/Home/presentation/screens/meal_details_screen.dart';
 import 'package:meal_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:meal_app/features/auth/presentation/screens/register.dart';
 import 'package:meal_app/features/layout/presentation/layout/screens/layout_screen.dart';
@@ -18,7 +20,11 @@ class AppRouter {
       case AppRoutes.onboarding:
         return MaterialPageRoute(builder: (_) => const OnBoardingScreen());
       case AppRoutes.layout:
-        return MaterialPageRoute(builder: (_) =>  LayoutScreen()) ;
+        return MaterialPageRoute(builder: (_) => LayoutScreen());
+      case AppRoutes.mealDetails:
+        return MaterialPageRoute(
+          builder: (_) => MealDetailsScreen(meal: settings.arguments as Meal,),
+        );
       default:
         return MaterialPageRoute(
           builder:

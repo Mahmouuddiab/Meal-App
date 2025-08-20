@@ -1,4 +1,4 @@
-import 'package:meal_app/core/Models/Meal_Model.dart';
+import 'package:meal_app/core/Models/meal_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FavoritesRemoteDataSource {

@@ -7,7 +7,7 @@ class HomeInitial extends HomeState {}
 class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
-  final List<Meal> meals; // Changed from dynamic items to List<Meal>
+  final List<Meal> meals;
 
   HomeLoaded(this.meals);
 }
