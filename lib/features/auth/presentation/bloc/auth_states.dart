@@ -17,3 +17,12 @@ final class AuthFailure extends AuthStates {
   final String message;
   const AuthFailure(this.message);
 }
+
+final class AuthUpdateUserSuccess extends AuthStates{
+  final User user;
+  const AuthUpdateUserSuccess(this.user);
+}
+final class AuthUpdateUserFailure extends AuthStates{
+  final String message;
+  const AuthUpdateUserFailure(this.message);
+}

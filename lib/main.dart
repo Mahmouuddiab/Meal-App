@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           theme: AppTheme.lightTheme,
-          initialRoute: AppRoutes.geminiScreen,
+          initialRoute: AppRoutes.splash,
           onGenerateRoute: AppRouter.generateRoute,
           debugShowCheckedModeBanner: false,
         );

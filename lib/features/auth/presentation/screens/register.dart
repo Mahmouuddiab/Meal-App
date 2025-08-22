@@ -10,7 +10,9 @@ import 'package:meal_app/core/routing/app_routes.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:meal_app/features/auth/presentation/bloc/auth_states.dart';
 import 'package:meal_app/features/auth/presentation/screens/base_auth_screen.dart';
-import 'package:meal_app/features/auth/presentation/widgets/custom_field.dart';
+
+import '../../../../core/Widgets/custom_field.dart';
+
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -23,6 +25,7 @@ class _RegisterState extends State<Register> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final phoneController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   bool obscureText = true;
   @override
@@ -40,21 +43,27 @@ class _RegisterState extends State<Register> {
         if (state is AuthLoading) {
           DialogFunctions.showLoadingDialog(context, "Loading..");
         }
-        if (state is AuthFailure) {
+        else if (state is AuthFailure) {
           DialogFunctions.hideLoading(context);
           DialogFunctions.showMessageDialog(
             context: context,
             message: state.message,
             posActionName: "Ok",
             title: "Register Fail",
+            posAction: (){
+              Navigator.of(context).pop();
+            },
           );
         }
-        if (state is AuthSuccess) {
+        else if (state is AuthSuccess) {
           DialogFunctions.hideLoading(context);
           DialogFunctions.showMessageDialog(
             context: context,
             message: "success",
             posActionName: "Ok",
+            posAction: (){
+              Navigator.of(context).pop();
+            },
             title: "Register success",
           );
         }
@@ -66,6 +75,7 @@ class _RegisterState extends State<Register> {
               CustomField(
                 keyboardType: TextInputType.text,
                 hint: AppStrings.fullName,
+                style: TextStyle(color: AppColors.white),
                 prefixIcon: Icon(Icons.person_outline, color: AppColors.white),
                 label: AppStrings.fullName,
                 controller: nameController,
@@ -78,6 +88,7 @@ class _RegisterState extends State<Register> {
                 keyboardType: TextInputType.emailAddress,
                 hint: AppStrings.email,
                 label: AppStrings.email,
+                style: TextStyle(color: AppColors.white),
                 prefixIcon: const Icon(
                   Icons.email_outlined,
                   color: AppColors.white,
@@ -90,6 +101,7 @@ class _RegisterState extends State<Register> {
               CustomField(
                 hint: AppStrings.password,
                 label: AppStrings.password,
+                style: TextStyle(color: AppColors.white),
                 prefixIcon: const Icon(
                   Icons.lock_outline,
                   color: AppColors.white,
@@ -110,14 +122,28 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
               ),
+              Gap(15.h),
+              CustomField(
+                keyboardType: TextInputType.phone,
+                hint: AppStrings.phone,
+                style: TextStyle(color: AppColors.white),
+                prefixIcon: Icon(Icons.phone, color: AppColors.white),
+                label: AppStrings.phone,
+                controller: phoneController,
+                validator:
+                    (_) =>
+                        AppValidators.phoneValidator(phoneController.text),
+              ),
             ],
             buttonText: AppStrings.register,
             onButtonPressed: () {
-              if (formKey.currentState?.validate() ?? false) {
+              if (formKey.currentState!.validate()) {
                 context.read<AuthBloc>().add(
-                  AuthSignIn(
+                  AuthSignUp(
                     email: emailController.text,
                     password: passwordController.text,
+                    phone: phoneController.text,
+                    name: nameController.text
                   ),
                 );
               }

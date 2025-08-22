@@ -16,6 +16,7 @@ import '../../features/auth/domain/repository/auth_repository.dart';
 import '../../features/auth/domain/usecases/current_user.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecse.dart';
+import '../../features/auth/domain/usecases/update_user_profile.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 
 final serviceLocator = GetIt.instance;
@@ -46,12 +47,14 @@ void initAuth() {
     ..registerFactory(() => UserSignUp(serviceLocator()))
     ..registerFactory(() => UserSignIn(serviceLocator()))
     ..registerFactory(() => CurrentUser(serviceLocator()))
+    ..registerLazySingleton(() => UpdateUserProfile(repo: serviceLocator()))
     // Bloc
     ..registerLazySingleton(
       () => AuthBloc(
         currentUser: serviceLocator(),
         userSignUp: serviceLocator(),
         userSignIn: serviceLocator(),
+        updateUser:  serviceLocator()
       ),
     );
 }
