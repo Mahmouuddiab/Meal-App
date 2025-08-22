@@ -51,13 +51,19 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         else if (state is AuthSuccess) {
           DialogFunctions.hideLoading(context);
-          DialogFunctions.showMessageDialog(
-            context: context,
-            message: "success",
-            posActionName: "Ok",
-            title: "Login success",
-          );
           Navigator.pushReplacementNamed(context, AppRoutes.layout , arguments: state.user);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Login successful"),backgroundColor: Colors.green,duration: Durations.medium3,),
+          );
+          // DialogFunctions.showMessageDialog(
+          //   context: context,
+          //   message: "success",
+          //   posActionName: "Ok",
+          //   posAction: () {
+          //     Navigator.pop(context);
+          //   },
+          //   title: "Login success",
+          // );
         }
       },
       builder: (context, state) {
@@ -111,6 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   password: passwordController.text,
                 ),
               );
+              Navigator.pushNamedAndRemoveUntil(context, AppRoutes.layout, (route) => false);
             }
           },
           bottomText: AppStrings.doNotHaveAccount,

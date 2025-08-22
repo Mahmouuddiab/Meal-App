@@ -50,21 +50,16 @@ class AppStrings {
   static const String logout = "logout";
 
   //meal
-  static const String enterIngrediantes = "Enter your ingredients and your goal ";
+  static const String enterIngrediantes =
+      "Enter your ingredients and your goal ";
   static const String search = "Search Recipes";
   static const String summary = "Summary";
-  static const String nutrations = "Nutrations";
-  static const String protein = "Protein";
-  static const String carbs = "Carbs";
-  static const String fat = "Fat";
-  static const String kcal = "kcal";
-  static const String vitamins = "Vitamins";
+  static const String nutrition = "Nutrition";
   static const String ingredients = "Ingredients";
   static const String totalIngredients = "Total ingrediantes";
   static const String instructions = "Instructions";
   static const String totalSteps = "Total steps";
   static const String step = "Step";
   static const String minute = "min";
-  static const String serving = "serving";
-  static const String vegan = "Vegan";
+  static const String serving = "servings";
 }

@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_type_check
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meal_app/core/Models/Meal_Model.dart';
+import 'package:meal_app/core/Models/meal_model.dart';
 import 'package:meal_app/features/favorites/domain/repositories/favorite_repository.dart';
 import 'favorites_state.dart';
 

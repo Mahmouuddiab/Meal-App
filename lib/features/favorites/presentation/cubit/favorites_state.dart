@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:meal_app/core/Models/Meal_Model.dart';
+import 'package:meal_app/core/Models/meal_model.dart';
 
 abstract class FavoritesState extends Equatable {
   const FavoritesState();
