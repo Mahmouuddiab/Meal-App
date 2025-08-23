@@ -30,23 +30,40 @@ class Meal {
   });
 
   factory Meal.fromJson(Map<dynamic, dynamic> json) {
+    String summary = json['summary'] ?? '';
+
+    List<Nutrition> nutritionList = [];
+    final regex = RegExp(r'(\w+):\s*([\d.]+)\s*([a-zA-Zµ]+)?');
+    for (final match in regex.allMatches(summary)) {
+      nutritionList.add(
+        Nutrition(
+          name: match.group(1) ?? '',
+          value: double.tryParse(match.group(2) ?? '0') ?? 0,
+          unit: match.group(3) ?? '',
+        ),
+      );
+    }
+    summary = summary.replaceAll(
+      RegExp(r'Nutritional information \(per serving\):', caseSensitive: false),
+      '',
+    );
+    summary =
+        summary.replaceAll(RegExp(r'\b\w+:\s*[\d.]+\s*[a-zA-Zµ]*'), '').trim();
+    summary = summary.replaceAll(RegExp(r'[,\s]+'), ' ').trim();
     return Meal(
       id: json['id'] as String,
       category: json['meal_type'] ?? '',
       title: json['name'] ?? '',
       time: json['cook_time'] ?? 0,
       imageUrl: json['image_url'] ?? '',
-      summary: json['summary'] ?? '',
+      summary: summary,
       servings: json['serving_size'] ?? 0,
       rating: (json['rating'] ?? 0).toDouble(),
       ingredientsList:
           (json['ingredients'] as List)
               .map((i) => Ingredient.fromJson(i))
               .toList(),
-      nutritionList:
-          (json['nutrition'] as List? ?? [])
-              .map((i) => Nutrition.fromJson(i))
-              .toList(),
+      nutritionList: nutritionList,
       stepsList:
           (json['meal_steps'] as List? ?? []).map((i) {
             if (i is String) {
