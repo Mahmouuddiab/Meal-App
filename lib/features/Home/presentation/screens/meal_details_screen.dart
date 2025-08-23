@@ -70,6 +70,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen>
                 ),
                 Text(
                   widget.meal.title,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 28.sp,
