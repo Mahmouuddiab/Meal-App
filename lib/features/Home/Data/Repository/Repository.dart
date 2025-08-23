@@ -8,8 +8,8 @@ class MealsRepositoryImpl implements MealsRepository {
   MealsRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<List<Meal>> getMeals() {
-    return remoteDataSource.getMeals();
+  Future<List<Meal>> getMeals(String userId) {
+    return remoteDataSource.getMeals(userId);
   }
 
  @override

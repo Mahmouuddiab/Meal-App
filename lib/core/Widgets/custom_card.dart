@@ -79,11 +79,16 @@ class CustomCard extends StatelessWidget {
                                     fontSize: 15.sp,
                                   ),
                                 ),
-                                Text(
-                                  meal.title,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.sp,
+                                SizedBox(
+                                  width: 120.w,
+                                  child: Text(
+                                    meal.title,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.sp,
+                                      overflow: TextOverflow.fade,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -113,11 +118,14 @@ class CustomCard extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Icon(Icons.star, color: Colors.orange, size: 18.h),
-                            Icon(Icons.star, color: Colors.orange, size: 18.h),
-                            Icon(Icons.star, color: Colors.orange, size: 18.h),
-                            Icon(Icons.star, color: Colors.orange, size: 18.h),
-                            Icon(Icons.star, color: Colors.orange, size: 18.h),
+                            Icon(Icons.star, color: Colors.orange, size: 20.h),
+                            Text(
+                              meal.rating.toString(),
+                              style: TextStyle(
+                                color: AppColors.textGray,
+                                fontSize: 15.sp,
+                              ),
+                            ),
                           ],
                         ),
                       ],

@@ -12,10 +12,10 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.repo) : super(HomeInitial());
 
   /// Fetch meals from Supabase
-  Future<void> fetchItems() async {
+  Future<void> fetchItems(String userId) async {
     emit(HomeLoading());
     try {
-      final meals = await repo.getMeals();
+      final meals = await repo.getMeals(userId);
       emit(HomeLoaded(meals));
     } catch (e) {
       emit(HomeError(e.toString()));

@@ -16,9 +16,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => serviceLocator<AuthBloc>()),
-        BlocProvider(
-          create: (context) => serviceLocator<HomeCubit>()..fetchItems(),
-        ),
+        BlocProvider(create: (context) => serviceLocator<HomeCubit>()),
         BlocProvider(create: (context) => serviceLocator<FavoritesCubit>()),
       ],
       child: const MyApp(),
