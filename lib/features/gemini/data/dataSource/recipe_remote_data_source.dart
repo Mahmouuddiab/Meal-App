@@ -3,6 +3,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:meal_app/features/gemini/data/models/ai_meal_model.dart';
 import 'package:meal_app/features/gemini/data/models/image_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RecipeRemoteDatasource {
   final String apiKey = 'AIzaSyCnVIAT6SokSOLGCxMIsRaFdR0lmEa1j4U';
@@ -60,31 +61,31 @@ class RecipeRemoteDatasource {
     }
   }
 
-
   Future<ImageModel> getDishImage(String dishName) async {
-    Uri url = Uri.https(
-      'api.spoonacular.com',
-      '/recipes/complexSearch',
-      {
-        'apiKey': 'd199902f62f24b7eb4e9f9f825721f62',
-        'query': dishName,
-        'addRecipeInformation': 'false',
-      },
-    );
+    Uri url = Uri.https('api.spoonacular.com', '/recipes/complexSearch', {
+      'apiKey': 'd199902f62f24b7eb4e9f9f825721f62',
+      'query': dishName,
+      'addRecipeInformation': 'false',
+    });
 
     try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-      });
+      var response = await http.get(
+        url,
+        headers: {'Content-Type': 'application/json'},
+      );
 
       if (response.statusCode != 200) {
-        throw Exception("Failed to load image: ${response.statusCode} ${response.body}");
+        throw Exception(
+          "Failed to load image: ${response.statusCode} ${response.body}",
+        );
       }
 
       var json = jsonDecode(response.body);
       var results = json['results'] as List;
       if (results.isNotEmpty) {
-        return ImageModel.fromJson(json); // assuming your ImageModel expects id/title/image
+        return ImageModel.fromJson(
+          json,
+        ); // assuming your ImageModel expects id/title/image
       } else {
         throw Exception("No image found for $dishName");
       }
@@ -94,5 +95,34 @@ class RecipeRemoteDatasource {
     }
   }
 
+  final SupabaseClient client = Supabase.instance.client;
 
+  Future<void> saveMeal(AIMeal meal) async {
+    try {
+      await client.from('meals').insert({
+        'name': meal.name,
+        'meal_type': meal.mealType,
+        'rating': meal.rating,
+        'cook_time': meal.cookTime,
+        'serving_size': meal.servingSize,
+        'summary': meal.summary,
+        'ingredients':
+            meal.ingredients
+                .map(
+                  (i) => {
+                    'name': i.name,
+                    'image_url': i.image,
+                    'quantity': i.quantity,
+                  },
+                )
+                .toList(),
+        'meal_steps': meal.mealSteps.map((s) => s.toString()).toList(),
+        'created_at': DateTime.now().toIso8601String(),
+      });
+    } on PostgrestException catch (e) {
+      throw Exception('Failed to save meal: ${e.message}');
+    } catch (e) {
+      throw Exception('Unexpected error: $e');
+    }
+  }
 }

@@ -6,10 +6,11 @@ class Meal {
   final String id;
   final String category;
   final String title;
-  final String time;
+  final int time;
   final String imageUrl;
   final String summary;
   final int servings;
+  final double rating;
   final List<Ingredient> ingredientsList;
   final List<Nutrition> nutritionList;
   final List<Steps> stepsList;
@@ -22,6 +23,7 @@ class Meal {
     required this.imageUrl,
     required this.summary,
     required this.servings,
+    required this.rating,
     required this.ingredientsList,
     required this.nutritionList,
     required this.stepsList,
@@ -30,34 +32,43 @@ class Meal {
   factory Meal.fromJson(Map<dynamic, dynamic> json) {
     return Meal(
       id: json['id'] as String,
-      category: json['category'] ?? '',
-      title: json['title'] ?? '',
-      time: json['time'] ?? '',
+      category: json['meal_type'] ?? '',
+      title: json['name'] ?? '',
+      time: json['cook_time'] ?? 0,
       imageUrl: json['image_url'] ?? '',
       summary: json['summary'] ?? '',
-      servings: json['serving'] ?? 0,
+      servings: json['serving_size'] ?? 0,
+      rating: (json['rating'] ?? 0).toDouble(),
       ingredientsList:
-          (json['ingredient_items'] as List)
+          (json['ingredients'] as List)
               .map((i) => Ingredient.fromJson(i))
               .toList(),
       nutritionList:
-          (json['nutrition'] as List)
+          (json['nutrition'] as List? ?? [])
               .map((i) => Nutrition.fromJson(i))
               .toList(),
-      stepsList: (json['steps'] as List).map((i) => Steps.fromJson(i)).toList(),
+      stepsList:
+          (json['meal_steps'] as List? ?? []).map((i) {
+            if (i is String) {
+              return Steps(description: i);
+            } else {
+              return Steps.fromJson(i);
+            }
+          }).toList(),
     );
   }
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'category': category,
-    'title': title,
-    'time': time,
+    'meal_type': category,
+    'name': title,
+    'cook_time': time,
     'image_url': imageUrl,
     'summary': summary,
-    'serving': servings,
-    'ingredient_items': ingredientsList.map((i) => i.toJson()).toList(),
+    'serving_size': servings,
+    'rating': rating,
+    'ingredients': ingredientsList.map((i) => i.toJson()).toList(),
     'nutrition': nutritionList.map((i) => i.toJson()).toList(),
-    'steps': stepsList.map((i) => i.toJson()).toList(),
+    'meal_steps': stepsList.map((i) => i.toJson()).toList(),
   };
 }

@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meal_app/core/Utils/app_colors.dart';
 import 'package:meal_app/core/Widgets/custom_card.dart';
+import 'package:meal_app/core/routing/app_routes.dart';
 // import 'package:meal_app/core/locator/service_locator.dart';
 // import 'package:meal_app/features/Home/Domain/Repository/Repository.dart';
 import 'package:meal_app/features/Home/presentation/Cubit/home_cubit.dart';
@@ -23,7 +25,7 @@ class HomeScreen extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (userId != null) {
         context.read<FavoritesCubit>().loadFavorites(userId);
-        context.read<HomeCubit>().fetchItems();
+        context.read<HomeCubit>().fetchItems(userId);
       }
     });
 
@@ -65,7 +67,9 @@ class HomeScreen extends StatelessWidget {
                   ),
                   InkWell(
                     // navigate to screen that you can add ingredients
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRoutes.geminiScreen);
+                    },
                     child: Row(
                       children: [
                         Spacer(),

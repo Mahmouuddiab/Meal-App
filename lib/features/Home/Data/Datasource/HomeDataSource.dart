@@ -6,16 +6,14 @@ class MealsRemoteDataSource {
   MealsRemoteDataSource(this.supabase);
 
   // Get all meals
-  Future<List<Meal>> getMeals() async {
+  Future<List<Meal>> getMeals(String userId) async {
     final res = await supabase
         .from('meals')
         .select('*')
+        .eq('user_id', userId)
         .order('created_at', ascending: false);
 
-    final List list = res as List<dynamic>;
-    return list
-        .map((e) => Meal.fromJson(Map<String, dynamic>.from(e)))
-        .toList();
+    return res.map((e) => Meal.fromJson(Map<String, dynamic>.from(e))).toList();
   }
 
   // Check if a meal is a favorite for a specific user
