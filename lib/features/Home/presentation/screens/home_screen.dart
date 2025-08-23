@@ -10,7 +10,6 @@ import 'package:meal_app/features/Home/presentation/Cubit/home_cubit.dart';
 import 'package:meal_app/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:meal_app/features/favorites/presentation/cubit/favorites_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../../../../core/Widgets/custom_field.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -55,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                     keyboardType: TextInputType.text,
                     obscureText: false,
                     prefixIcon: Icon(
-                      CupertinoIcons.search,
+                      Icons.search,
                       color: AppColors.primary,
                     ),
                     suffixIcon: Icon(
