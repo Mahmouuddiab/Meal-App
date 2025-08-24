@@ -5,10 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meal_app/core/Utils/app_colors.dart';
 import 'package:meal_app/core/Widgets/custom_card.dart';
 import 'package:meal_app/core/routing/app_routes.dart';
-// import 'package:meal_app/core/locator/service_locator.dart';
-// import 'package:meal_app/features/Home/Domain/Repository/Repository.dart';
 import 'package:meal_app/features/Home/presentation/Cubit/home_cubit.dart';
-
 import 'package:meal_app/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:meal_app/features/favorites/presentation/cubit/favorites_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -33,7 +30,6 @@ class HomeScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is FavoritesLoaded) {
           print('Favorites loaded, triggering UI refresh');
-          // Force rebuild of the entire widget tree if needed
           (context as Element).markNeedsBuild();
         }
       },
@@ -44,7 +40,6 @@ class HomeScreen extends StatelessWidget {
           } else if (state is HomeError) {
             return Center(child: Text(state.message));
           } else if (state is HomeLoaded) {
-            // final meals = state.items;
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -55,10 +50,7 @@ class HomeScreen extends StatelessWidget {
                     label: "Search Recipe",
                     keyboardType: TextInputType.text,
                     obscureText: false,
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: AppColors.primary,
-                    ),
+                    prefixIcon: Icon(Icons.search, color: AppColors.primary),
                     suffixIcon: Icon(
                       Icons.filter_list_sharp,
                       size: 30,
@@ -66,7 +58,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   InkWell(
-                    // navigate to screen that you can add ingredients
                     onTap: () {
                       Navigator.pushNamed(context, AppRoutes.geminiScreen);
                     },
