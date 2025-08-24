@@ -12,6 +12,11 @@ class MealsRepositoryImpl implements MealsRepository {
     return remoteDataSource.getMeals(userId);
   }
 
+  @override
+  Future<void> deleteMeal(String mealId, String userId) {
+    return remoteDataSource.deleteMeal(userId, mealId);
+  }
+
  @override
   Future<bool> isFavorite(String userId, String mealId) {
     return remoteDataSource.isFavorite(userId, mealId);

@@ -27,7 +27,11 @@ Widget buildIngredientsTab({required Meal meal}) {
           itemCount: meal.ingredientsList.length,
           itemBuilder: (context, index) {
             final ingredient = meal.ingredientsList[index];
-            return _buildIngredientItem(ingredient.name, ingredient.quantity);
+            return _buildIngredientItem(
+              ingredient.name,
+              ingredient.quantity,
+              ingredient.imageUrl,
+            );
           },
         ),
       ],
@@ -35,12 +39,28 @@ Widget buildIngredientsTab({required Meal meal}) {
   );
 }
 
-Widget _buildIngredientItem(String name, String quantity) {
+Widget _buildIngredientItem(String name, String quantity, String imageUrl) {
   return Column(
     children: [
       Row(
         children: [
-          CircleAvatar(radius: 18.r, backgroundColor: AppColors.unselectedGray),
+          Container(
+            width: 36.w,
+            height: 36.h,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.unselectedGray,
+            ),
+            child: ClipOval(
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.fill,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.restaurant_menu, color: AppColors.white);
+                },
+              ),
+            ),
+          ),
           SizedBox(width: 16.w),
           Expanded(
             child: Text(
@@ -58,9 +78,9 @@ Widget _buildIngredientItem(String name, String quantity) {
           ),
         ],
       ),
-      SizedBox(height: 18.h),
+      SizedBox(height: 15.h),
       Divider(color: AppColors.primary, thickness: 1.5),
-      SizedBox(height: 18.h),
+      SizedBox(height: 15.h),
     ],
   );
 }

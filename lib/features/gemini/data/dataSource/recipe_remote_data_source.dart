@@ -75,33 +75,54 @@ class RecipeRemoteDatasource {
       );
 
       if (response.statusCode != 200) {
-        throw Exception(
-          "Failed to load image: ${response.statusCode} ${response.body}",
-        );
+        // return default image model on API failure
+        return _defaultImageModel(dishName);
       }
 
       var json = jsonDecode(response.body);
       var results = json['results'] as List;
+
       if (results.isNotEmpty) {
-        return ImageModel.fromJson(
-          json,
-        ); // assuming your ImageModel expects id/title/image
+        return ImageModel.fromJson(json);
       } else {
-        throw Exception("No image found for $dishName");
+        // return default image model if no results
+        return _defaultImageModel(dishName);
       }
     } catch (e) {
       print("Error fetching image: $e");
-      rethrow;
+      // fallback to default
+      return _defaultImageModel(dishName);
     }
+  }
+
+  ImageModel _defaultImageModel(String dishName) {
+    return ImageModel(
+      results: [
+        Results(
+          id: -1,
+          title: dishName,
+          image:
+              "https://cdn.iconscout.com/icon/free/png-256/free-dinner-plate-2-532639.png",
+          imageType: "png",
+        ),
+      ],
+      offset: 0,
+      number: 1,
+      totalResults: 1,
+    );
   }
 
   final SupabaseClient client = Supabase.instance.client;
 
   Future<void> saveMeal(AIMeal meal) async {
     try {
+      final imageModel = await getDishImage(meal.name);
+      final mealImageUrl = imageModel.results!.first.image;
+
       await client.from('meals').insert({
         'name': meal.name,
         'meal_type': meal.mealType,
+        'image_url': mealImageUrl ?? '',
         'rating': meal.rating,
         'cook_time': meal.cookTime,
         'serving_size': meal.servingSize,

@@ -33,7 +33,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   Widget build(BuildContext context) {
     final user = Supabase.instance.client.auth.currentUser;
     final userId = user?.id;
-    print(userId);
 
     if (userId == null) {
       return Scaffold(

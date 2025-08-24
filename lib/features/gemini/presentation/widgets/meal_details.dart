@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meal_app/core/Utils/app_colors.dart';
+import 'package:meal_app/features/Home/presentation/Cubit/home_cubit.dart';
 import 'package:meal_app/features/gemini/data/dataSource/recipe_remote_data_source.dart';
 import 'package:meal_app/features/gemini/presentation/widgets/ingredients_list.dart';
 import 'package:meal_app/features/gemini/presentation/widgets/instructions_list.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../Screens/gemini_screen.dart';
 import '../cubit/suggested_recipe_state.dart';
 import 'card_content.dart';
@@ -15,7 +18,8 @@ class RecipeDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final recipe = state.suggestedRecipe;
-
+    final user = Supabase.instance.client.auth.currentUser;
+    final userId = user?.id;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,12 +42,12 @@ class RecipeDetails extends StatelessWidget {
             onPressed: () async {
               try {
                 final mealDatasource = RecipeRemoteDatasource();
-                await mealDatasource.saveMeal(
-                  recipe,
-                ); 
+                await mealDatasource.saveMeal(recipe);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Meal added to Home!")),
                 );
+                Navigator.pop(context);
+                context.read<HomeCubit>().fetchItems(userId!);
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Failed to save meal: $e")),

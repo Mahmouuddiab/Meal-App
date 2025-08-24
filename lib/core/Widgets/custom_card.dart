@@ -6,8 +6,10 @@ import 'package:meal_app/core/Utils/app_colors.dart';
 import 'package:meal_app/core/Utils/app_images.dart';
 import 'package:meal_app/core/Widgets/custom_favorite_button.dart';
 import 'package:meal_app/core/routing/app_routes.dart';
+import 'package:meal_app/features/Home/presentation/Cubit/home_cubit.dart';
 import 'package:meal_app/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:meal_app/features/favorites/presentation/cubit/favorites_state.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CustomCard extends StatelessWidget {
   const CustomCard({
@@ -35,7 +37,7 @@ class CustomCard extends StatelessWidget {
           child: Container(
             margin: EdgeInsets.only(bottom: 15.h),
             width: 368.w,
-            height: 119.h,
+            height: 143.h,
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.borderGray),
               color: AppColors.white,
@@ -83,10 +85,11 @@ class CustomCard extends StatelessWidget {
                                   width: 120.w,
                                   child: Text(
                                     meal.title,
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20.sp,
+                                      fontSize: 18.sp,
                                       overflow: TextOverflow.fade,
                                     ),
                                   ),
@@ -124,6 +127,60 @@ class CustomCard extends StatelessWidget {
                               style: TextStyle(
                                 color: AppColors.textGray,
                                 fontSize: 15.sp,
+                              ),
+                            ),
+                            Spacer(),
+                            InkWell(
+                              onTap: () async {
+                                print(
+                                  "Trying to delete meal with id: ${meal.id}",
+                                );
+
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder:
+                                      (context) => AlertDialog(
+                                        title: Text("Delete Meal"),
+                                        content: Text(
+                                          "Are you sure you want to delete this meal?",
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.pop(
+                                                  context,
+                                                  false,
+                                                ),
+                                            child: Text("Cancel"),
+                                          ),
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.pop(
+                                                  context,
+                                                  true,
+                                                ),
+                                            child: Text("Delete"),
+                                          ),
+                                        ],
+                                      ),
+                                );
+
+                                if (confirm == true) {
+                                  await context.read<HomeCubit>().deleteMeal(
+                                    meal.id,
+                                    Supabase
+                                        .instance
+                                        .client
+                                        .auth
+                                        .currentUser!
+                                        .id,
+                                  );
+                                }
+                              },
+                              child: Icon(
+                                Icons.delete,
+                                size: 20.h,
+                                color: Colors.red,
                               ),
                             ),
                           ],
