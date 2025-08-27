@@ -16,6 +16,21 @@ class MealsRemoteDataSource {
     return res.map((e) => Meal.fromJson(Map<String, dynamic>.from(e))).toList();
   }
 
+  Future<void> deleteMeal(String userId, String mealId) async {
+    try {
+      final response =
+          await Supabase.instance.client
+              .from('meals')
+              .delete()
+              .eq('id', mealId)
+              .select();
+
+      print("Meal deleted successfully: $response");
+    } catch (e) {
+      print("Error deleting meal: $e");
+    }
+  }
+
   // Check if a meal is a favorite for a specific user
   Future<bool> isFavorite(String userId, String mealId) async {
     final res =

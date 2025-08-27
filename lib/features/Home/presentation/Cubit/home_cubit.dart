@@ -21,4 +21,12 @@ class HomeCubit extends Cubit<HomeState> {
       emit(HomeError(e.toString()));
     }
   }
+  Future<void> deleteMeal(String mealId, String userId) async {
+    try {
+      await repo.deleteMeal(mealId, userId);
+      fetchItems(userId); // Refresh the meal list after deletion
+    } catch (e) {
+      emit(HomeError("Failed to delete meal: $e"));
+    }
+  }
 }

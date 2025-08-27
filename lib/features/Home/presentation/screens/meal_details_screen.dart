@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meal_app/core/Models/meal_model.dart';
 import 'package:meal_app/core/Utils/app_colors.dart';
-import 'package:meal_app/core/Utils/app_images.dart';
 import 'package:meal_app/core/Utils/strings.dart';
 import 'package:meal_app/core/Widgets/custom_favorite_button.dart';
 import 'package:meal_app/features/Home/presentation/widgets/build_ingredients.dart';
@@ -63,11 +62,15 @@ class _MealDetailsScreenState extends State<MealDetailsScreen>
                 Image(
                   image:
                       widget.meal.imageUrl == ""
-                          ? AssetImage(AppImages.noImage)
+                          ? NetworkImage(
+                            "https://cdn.iconscout.com/icon/free/png-256/free-dinner-plate-2-532639.png",
+                          )
                           : NetworkImage(widget.meal.imageUrl),
                   fit: BoxFit.cover,
                   height: 235.h,
+                  width: double.infinity,
                 ),
+                SizedBox(height: 11.h),
                 Text(
                   widget.meal.title,
                   textAlign: TextAlign.center,
@@ -76,6 +79,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen>
                     fontSize: 28.sp,
                   ),
                 ),
+                SizedBox(height: 11.h),
                 Text(
                   '${widget.meal.category == '' ? 'meat' : widget.meal.category} . ${widget.meal.time}min . ${widget.meal.servings} ${AppStrings.serving}',
                   style: TextStyle(color: AppColors.textGray, fontSize: 18.sp),
