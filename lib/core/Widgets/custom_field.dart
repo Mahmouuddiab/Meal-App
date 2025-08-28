@@ -12,6 +12,8 @@ class CustomField extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final TextStyle? style;
+  final void Function(String)? onChanged;
+  final void Function()? onTap;
   const CustomField({
     super.key,
     required this.hint,
@@ -19,10 +21,12 @@ class CustomField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.controller,
-     this.obscureText,
+    this.obscureText,
     this.validator,
     this.keyboardType,
-    this.style
+    this.style,
+    this.onChanged,
+    this.onTap
   });
 
   @override
@@ -60,7 +64,8 @@ class CustomField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText ?? false,
       validator: validator,
-      
+      onChanged: onChanged,
+      onTap: onTap,
     );
   }
 }

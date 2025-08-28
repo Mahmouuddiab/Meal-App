@@ -49,6 +49,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return BlocConsumer<AuthBloc, AuthStates>(
       listener: (context , state){
+        if(state is AuthLoading){
+          DialogFunctions.showLoadingDialog(context, "Loading..");
+        }
         if(state is AuthUpdateUserSuccess){
           DialogFunctions.hideLoading(context);
           DialogFunctions.showMessageDialog(
@@ -57,7 +60,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             posActionName: "Ok",
             title: "update success",
           );
-         context.read<LayoutCubit>().currentUser = state.user;
+
+          context.read<LayoutCubit>().currentUser = state.user;
         }
         else if(state is AuthUpdateUserFailure){
           DialogFunctions.hideLoading(context);

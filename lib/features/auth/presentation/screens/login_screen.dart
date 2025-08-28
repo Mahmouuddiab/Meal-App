@@ -117,7 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   password: passwordController.text,
                 ),
               );
-              Navigator.pushNamedAndRemoveUntil(context, AppRoutes.layout, (route) => false);
             }
           },
           bottomText: AppStrings.doNotHaveAccount,
