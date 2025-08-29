@@ -10,6 +10,7 @@ import 'package:meal_app/features/favorites/presentation/cubit/favorites_cubit.d
 import 'package:meal_app/features/favorites/presentation/cubit/favorites_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/Widgets/custom_field.dart';
+import 'search_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -45,16 +46,26 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 spacing: 10.h,
                 children: [
-                  CustomField(
-                    hint: "Search Recipe",
-                    label: "Search Recipe",
-                    keyboardType: TextInputType.text,
-                    obscureText: false,
-                    prefixIcon: Icon(Icons.search, color: AppColors.primary),
-                    suffixIcon: Icon(
-                      Icons.filter_list_sharp,
-                      size: 30,
-                      color: AppColors.primary,
+                  Hero(
+                    tag: "search",
+                    child: Material(
+                      child: CustomField(
+                        hint: "Search Recipe",
+                        label: "Search Recipe",
+                        keyboardType: TextInputType.text,
+                        obscureText: false,
+                        prefixIcon: Icon(Icons.search, color: AppColors.primary),
+                        suffixIcon: Icon(
+                          Icons.filter_list_sharp,
+                          size: 30,
+                          color: AppColors.primary,
+                        ),
+                        onTap: (){
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => SearchScreen(meals:state.meals,))
+                          );
+                        },
+                      ),
                     ),
                   ),
                   InkWell(
