@@ -69,7 +69,7 @@ Widget _buildNutritionCircle(String value, String label) {
               ),
             ),
             Text(
-              label,
+              label == 'Carbohydrates' ? 'Carbs' : label,
               style: TextStyle(fontSize: 14.sp, color: AppColors.primary),
             ),
           ],

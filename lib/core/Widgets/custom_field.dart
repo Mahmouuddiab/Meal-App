@@ -26,15 +26,13 @@ class CustomField extends StatelessWidget {
     this.keyboardType,
     this.style,
     this.onChanged,
-    this.onTap
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      
       keyboardType: keyboardType,
-      cursorColor: AppColors.primary,
       style: style,
       decoration: InputDecoration(
         border: OutlineInputBorder(
@@ -47,19 +45,15 @@ class CustomField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: AppColors.gray, width: 1.5.w),
+          borderSide: BorderSide(color: AppColors.gray, width: 2.4.w),
         ),
         hintText: hint,
         labelText: label,
         floatingLabelBehavior: FloatingLabelBehavior.never,
-        hintStyle: style?.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
-        labelStyle: style?.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
+        hintStyle: style?.copyWith(fontWeight: FontWeight.w200),
+        labelStyle: style?.copyWith(fontWeight: FontWeight.w600),
         prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon
+        suffixIcon: suffixIcon,
       ),
       controller: controller,
       obscureText: obscureText ?? false,

@@ -15,5 +15,10 @@ class AppTheme {
       selectedIconTheme: IconThemeData(color: AppColors.white, size: 30),
       unselectedIconTheme: IconThemeData(color: AppColors.primary, size: 30),
     ),
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: AppColors.gray,
+      selectionColor: AppColors.blue.withOpacity(0.4),
+      selectionHandleColor: AppColors.blue,
+    ),
   );
 }
